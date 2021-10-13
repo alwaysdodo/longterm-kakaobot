@@ -12,7 +12,7 @@ const WEEKS: [from: string, to: string][] = [
 
 const NOTION_SECRET = Deno.env.get('NOTION_SECRET')
 
-async function writeDodoLog(name: string, content: string) {
+async function writeDodoLog(name: string, content: string): Promise<string> {
   const today = new Date()
     .toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })
     .replace(/\.\s*/g, '-')
@@ -22,7 +22,7 @@ async function writeDodoLog(name: string, content: string) {
     ([from, to]) => from <= today && today <= to
   )
   if (weekIndex < 0) {
-    return '기간아님'
+    return '인증기간이 끝났어요. 다음번 두두에 만나요! 뿅 🐹'
   }
   
   const db = await fetch(`https://api.notion.com/v1/databases/${NOTION_DATABASE}/query`, {
@@ -42,7 +42,7 @@ async function writeDodoLog(name: string, content: string) {
   })
 
   if (!result) {
-    return '못찾움'
+    return '목표달성표에서 찾지 못했어요. 닉네임 확인 부탁드려요. 🥲'
   }
 
   {
@@ -80,7 +80,7 @@ async function writeDodoLog(name: string, content: string) {
         },
       }),
     }).then((response) => response.json())
-    return '성공!'
+    return `${name}님! ${weekName} 인증이 완료되었어요! 😎`
   }
 
   // const page = await fetch(`https://api.notion.com/v1/pages/${result.id}`, {
@@ -119,12 +119,10 @@ addEventListener("fetch", async (event) => {
     return
   }
 
-  console.log(body)
+  console.log(`[BODY] ${JSON.stringify(body)}`)
 
   if (!body.message.includes('#인증')) {
-    event.respondWith(createJsonResponse({
-      reply: '인증이 아님',
-    }));
+    event.respondWith(createJsonResponse({}));
     return
   }
 
