@@ -62,21 +62,26 @@ async function hashHexColor(message: string) {
     new TextEncoder().encode(message),
   );
   const numbers = Array.from(new Uint8Array(hashBuffer)).slice(0, 3);
+
   const hex = numbers.map((b) => b.toString(16).padStart(2, "0")).join(
     "",
   );
   return `#${hex}`;
 }
 
-async function createKakaoBalloonSvg(
+export async function createKakaoBalloonSvg(
   name: string,
   message: string,
-  time: string,
+  timestamp: number,
 ) {
   const svg = createFontToSvg(await Deno.readFile("./DungGeunMo.otf"));
 
   const mAvatar = svg(name[0], { fontSize: 60 });
   const mName = svg(name, { fontSize: 36 });
+
+  const time = new Date(timestamp).toLocaleTimeString("ko-KR", {
+    timeZone: "Asia/Seoul",
+  });
   const mTime = svg(time, { fontSize: 32 });
 
   const metrics = message.trim().split("\n").flatMap((line) =>
@@ -106,7 +111,7 @@ async function createKakaoBalloonSvg(
 
   let body =
     `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width +
-      420}" height="${height + 224}">`;
+      445}" height="${height + 224}">`;
   body += `<rect width="100%" height="100%" fill="#262628"/>`;
   body +=
     `<path d="M132,94.25C132,73.139 114.861,56 93.75,56L68.25,56C47.139,56 30,73.139 30,94.25L30,119.75C30,140.861 47.139,158 68.25,158L93.75,158C114.861,158 132,140.861 132,119.75L132,94.25Z" fill="${avatarBgColor}" />`;
@@ -137,7 +142,7 @@ if (import.meta.main) {
     await createKakaoBalloonSvg(
       "완두",
       "동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려강산 대한사람 대한으로 길이보전하세.\nHello World\n와왕.......!!!!",
-      "오후 5:30",
+      Date.now(),
     ),
   );
 }
