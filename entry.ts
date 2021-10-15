@@ -13,7 +13,8 @@ const WEEKS: [from: string, to: string][] = [
 const NOTION_SECRET = Deno.env.get("NOTION_SECRET");
 
 async function writeDodoLog(name: string, content: string): Promise<string> {
-  const today = new Date()
+  const now = new Date();
+  const today = now
     .toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })
     .replace(/\.\s*/g, "-")
     .replace(/-+$/, "");
@@ -87,6 +88,45 @@ async function writeDodoLog(name: string, content: string): Promise<string> {
       }),
     }).then((response) => response.json());
   }
+  {
+    const imageUrl = new URL("https://longterm-kakaobot.deno.dev/message.svg");
+    imageUrl.searchParams.set("name", name);
+    imageUrl.searchParams.set("message", content);
+    imageUrl.searchParams.set("ts", `${now.getTime()}`);
+    await fetch(
+      `https://api.notion.com/v1/blocks/${result.id}/children`,
+      {
+        method: "PATCH",
+        headers: {
+          "Authorization": `Bearer ${NOTION_SECRET}`,
+          "Notion-Version": "2021-08-16",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          children: [
+            {
+              "object": "block",
+              "type": "paragraph",
+              "paragraph": {
+                "text": [{
+                  "type": "text",
+                  "text": { "content": `${today} 인증 추가` },
+                }],
+              },
+            },
+            {
+              type: "image",
+              image: {
+                external: {
+                  url: imageUrl.toString(),
+                },
+              },
+            },
+          ],
+        }),
+      },
+    ).then((response) => response.json());
+  }
 
   return `${name}님! ${weekName} 인증이 완료되었어요! 😎`;
 }
@@ -146,5 +186,3 @@ addEventListener("fetch", async (event) => {
     reply,
   }));
 });
-
-// console.log('->', await writeDodoLog('완두', '옿옿옿옹'))
