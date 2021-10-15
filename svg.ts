@@ -56,8 +56,16 @@ export function createFontToSvg(fontBuffer: Uint8Array) {
   };
 }
 
-function randomHexColor() {
-  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+async function hashHexColor(message: string) {
+  const hashBuffer = await crypto.subtle.digest(
+    "SHA-1",
+    new TextEncoder().encode(message),
+  );
+  const numbers = Array.from(new Uint8Array(hashBuffer)).slice(0, 3);
+  const hex = numbers.map((b) => b.toString(16).padStart(2, "0")).join(
+    "",
+  );
+  return `#${hex}`;
 }
 
 async function createKakaoBalloonSvg(
@@ -93,19 +101,22 @@ async function createKakaoBalloonSvg(
   const l0 = 156;
   const l1 = 156 + 41.25; // 197.25
 
+  const avatarBgColor = await hashHexColor(name);
+  const avatarTextColor = await hashHexColor(name[0]);
+
   let body =
     `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width +
       420}" height="${height + 224}">`;
   body += `<rect width="100%" height="100%" fill="#262628"/>`;
   body +=
-    `<path d="M132,94.25C132,73.139 114.861,56 93.75,56L68.25,56C47.139,56 30,73.139 30,94.25L30,119.75C30,140.861 47.139,158 68.25,158L93.75,158C114.861,158 132,140.861 132,119.75L132,94.25Z" fill="${randomHexColor()}" />`;
+    `<path d="M132,94.25C132,73.139 114.861,56 93.75,56L68.25,56C47.139,56 30,73.139 30,94.25L30,119.75C30,140.861 47.139,158 68.25,158L93.75,158C114.861,158 132,140.861 132,119.75L132,94.25Z" fill="${avatarBgColor}" />`;
   body +=
     `<path d="M168.788,125.404C176.191,118.341 186.217,${t0} ${l1},${t0}L${r1},${t0}C${r1 +
       r},${t0} ${r0},${t1 - r} ${r0},${t1}L${r0},${b1}C${r0},${b1 + r} ${r1 +
       r},${b0} ${r1},${b0}L${l1},${b0}C${l1 - r},${b0} ${l0},${b1 +
       r} ${l0},${b1}L${l0},${t1}C${l0},154.626 156.014,154.006 156.041,153.386C156.084,147.622 155.969,140.6 154.216,134.436C151.618,125.299 146.781,117.968 146.781,117.968C146.781,117.968 159.513,115.578 168.788,125.404Z" fill="#3A3A3C" />`;
   body += `<path transform="translate(${82 - mAvatar[0].w / 2},${106 -
-    mAvatar[0].h / 2})" fill="${randomHexColor()}" d="${mAvatar[0].d}"/>`;
+    mAvatar[0].h / 2})" fill="${avatarTextColor}" d="${mAvatar[0].d}"/>`;
   body += `<path transform="translate(154,60)" fill="#a8a8a9" d="${
     mName[0].d
   }"/>`;
@@ -124,7 +135,7 @@ async function createKakaoBalloonSvg(
 if (import.meta.main) {
   console.log(
     await createKakaoBalloonSvg(
-      "전창완",
+      "완두",
       "동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려강산 대한사람 대한으로 길이보전하세.\nHello World\n와왕.......!!!!",
       "오후 5:30",
     ),
