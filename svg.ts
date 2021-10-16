@@ -69,12 +69,14 @@ async function hashHexColor(message: string) {
   return `#${hex}`;
 }
 
+const fontBuffer = await Deno.readFile("./DungGeunMo.otf");
+
 export async function createKakaoBalloonSvg(
   name: string,
   message: string,
   timestamp: number,
 ) {
-  const svg = createFontToSvg(await Deno.readFile("./DungGeunMo.otf"));
+  const svg = createFontToSvg(fontBuffer);
 
   const mAvatar = svg(name[0], { fontSize: 60 });
   const mName = svg(name, { fontSize: 36 });
