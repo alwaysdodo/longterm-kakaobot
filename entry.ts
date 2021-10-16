@@ -1,6 +1,6 @@
 import { NotiflowBody } from "./notiflow.ts";
 import { createKakaoBalloonSvg } from "./svg.ts";
-const KAKAO_TITLE = "두두운영진테스트";
+const KAKAO_TITLE = "롱텀두두 4회";
 
 // Production: https://www.notion.so/alwaysdodo/72c32fb2699b4075bf907585f3fb59ed?v=29802380246f432b9f3488890c89caa9
 const NOTION_DATABASE = "72c32fb2699b4075bf907585f3fb59ed";
