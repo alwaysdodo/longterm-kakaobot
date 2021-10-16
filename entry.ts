@@ -2,8 +2,12 @@ import { NotiflowBody } from "./notiflow.ts";
 import { createKakaoBalloonSvg } from "./svg.ts";
 const KAKAO_TITLE = "두두운영진테스트";
 
-// https://www.notion.so/wan2land/2c5e7017d0604fcf9deeb9bd1ab5db6e?v=35912fbf6be8492b906f9cfba60ea351
-const NOTION_DATABASE = "2c5e7017d0604fcf9deeb9bd1ab5db6e";
+// Production: https://www.notion.so/alwaysdodo/72c32fb2699b4075bf907585f3fb59ed?v=29802380246f432b9f3488890c89caa9
+const NOTION_DATABASE = "72c32fb2699b4075bf907585f3fb59ed";
+
+// Development: https://www.notion.so/wan2land/2c5e7017d0604fcf9deeb9bd1ab5db6e?v=35912fbf6be8492b906f9cfba60ea351
+// const NOTION_DATABASE = "2c5e7017d0604fcf9deeb9bd1ab5db6e";
+
 const WEEKS: [from: string, to: string][] = [
   ["2021-10-11", "2021-10-17"],
   ["2021-10-18", "2021-10-24"],
@@ -12,7 +16,10 @@ const WEEKS: [from: string, to: string][] = [
 
 const NOTION_SECRET = Deno.env.get("NOTION_SECRET");
 
-async function writeDodoLog(name: string, content: string): Promise<string> {
+async function writeDodoLog(
+  name: string,
+  content: string,
+): Promise<string | undefined> {
   const now = new Date();
   const today = now
     .toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })
@@ -26,6 +33,18 @@ async function writeDodoLog(name: string, content: string): Promise<string> {
     return "인증기간이 끝났어요. 다음번 두두에 만나요! 뿅 🐹";
   }
 
+  // // 내 정보 가져오기, 디버깅용
+  // const me = await fetch(
+  //   `https://api.notion.com/v1/users/me`,
+  //   {
+  //     headers: {
+  //       "Authorization": `Bearer ${NOTION_SECRET}`,
+  //       "Notion-Version": "2021-08-16",
+  //     },
+  //   },
+  // ).then((response) => response.json());
+  // console.log("me", me);
+
   const db = await fetch(
     `https://api.notion.com/v1/databases/${NOTION_DATABASE}/query`,
     {
@@ -36,6 +55,10 @@ async function writeDodoLog(name: string, content: string): Promise<string> {
       },
     },
   ).then((response) => response.json());
+
+  if (db.message) {
+    throw new Error(db.message);
+  }
 
   const result = db.results.find((result: any) => {
     try {
@@ -180,9 +203,16 @@ addEventListener("fetch", async (event) => {
   }
 
   // 여기서 뭔가 작업합니다.
-  const reply = await writeDodoLog(body.name, body.message);
-
-  event.respondWith(createJsonResponse({
-    reply,
-  }));
+  try {
+    const reply = await writeDodoLog(body.name, body.message);
+    event.respondWith(createJsonResponse({
+      reply,
+    }));
+  } catch (e) {
+    console.log("[ERROR]", e);
+    event.respondWith(createJsonResponse({}));
+  }
 });
+
+// for debugging
+// console.log(await writeDodoLog("완두", "오오왕"));
