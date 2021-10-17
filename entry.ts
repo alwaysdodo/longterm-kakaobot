@@ -151,7 +151,7 @@ async function writeDodoLog(
     ).then((response) => response.json());
   }
 
-  return `${name}님! ${weekName} 인증이 완료되었어요! 😎`;
+  return `${name}님! ${weekName} 목표달성표에 등록되었어요! 😎`;
 }
 
 function createJsonResponse(json: any) {
