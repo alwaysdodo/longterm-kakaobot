@@ -1,17 +1,19 @@
 import { NotiflowBody } from "./notiflow.ts";
 import { createKakaoBalloonSvg } from "./svg.ts";
-const KAKAO_TITLE = "롱텀두두 4회";
+// const KAKAO_TITLE = "롱텀두두 5회차🍂🍁";
+const KAKAO_TITLE = "보리보리, 창완님"
 
-// Production: https://www.notion.so/alwaysdodo/72c32fb2699b4075bf907585f3fb59ed?v=29802380246f432b9f3488890c89caa9
-const NOTION_DATABASE = "72c32fb2699b4075bf907585f3fb59ed";
+// 4회 Production: https://www.notion.so/alwaysdodo/72c32fb2699b4075bf907585f3fb59ed?v=29802380246f432b9f3488890c89caa9
+// 5회 Production: https://www.notion.so/alwaysdodo/75993d54a0834cb7addcdb9f7fb6e4e6?v=4c74f9e5fb554d1d866967d7684a591d
+const NOTION_DATABASE = "75993d54a0834cb7addcdb9f7fb6e4e6";
 
 // Development: https://www.notion.so/wan2land/2c5e7017d0604fcf9deeb9bd1ab5db6e?v=35912fbf6be8492b906f9cfba60ea351
 // const NOTION_DATABASE = "2c5e7017d0604fcf9deeb9bd1ab5db6e";
 
 const WEEKS: [from: string, to: string][] = [
-  ["2021-10-11", "2021-10-17"],
-  ["2021-10-18", "2021-10-24"],
-  ["2021-10-25", "2021-10-31"],
+  ["2021-11-13", "2021-11-21"],
+  ["2021-11-22", "2021-11-28"],
+  ["2021-11-29", "2021-12-5"],
 ];
 
 const NOTION_SECRET = Deno.env.get("NOTION_SECRET");
