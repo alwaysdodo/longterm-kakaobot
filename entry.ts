@@ -1,3 +1,5 @@
+// TODO: KAKAO_TITLE, NOTION_DATABASE, WEEKS 수정 필요
+
 import { NotiflowBody } from "./notiflow.ts";
 import { createKakaoBalloonSvg } from "./svg.ts";
 // const KAKAO_TITLE = "롱텀두두 5회차🍂🍁";
