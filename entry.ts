@@ -6,8 +6,9 @@ import { createKakaoBalloonSvg } from "./svg.ts";
 const KAKAO_TITLE = "보리보리, 창완님"
 
 // 4회 Production: https://www.notion.so/alwaysdodo/72c32fb2699b4075bf907585f3fb59ed?v=29802380246f432b9f3488890c89caa9
+// 5회 Production: https://www.notion.so/alwaysdodo/d88a749ca4884655b66998f5a532f8ee?v=66e6f0de6f10468c9b9b7f11a2dcfb98
 // 5회 Production: https://www.notion.so/alwaysdodo/75993d54a0834cb7addcdb9f7fb6e4e6?v=4c74f9e5fb554d1d866967d7684a591d
-const NOTION_DATABASE = "75993d54a0834cb7addcdb9f7fb6e4e6";
+const NOTION_DATABASE = "d88a749ca4884655b66998f5a532f8ee";
 
 // Development: https://www.notion.so/wan2land/2c5e7017d0604fcf9deeb9bd1ab5db6e?v=35912fbf6be8492b906f9cfba60ea351
 // const NOTION_DATABASE = "2c5e7017d0604fcf9deeb9bd1ab5db6e";
@@ -15,7 +16,7 @@ const NOTION_DATABASE = "75993d54a0834cb7addcdb9f7fb6e4e6";
 const WEEKS: [from: string, to: string][] = [
   ["2021-11-13", "2021-11-21"],
   ["2021-11-22", "2021-11-28"],
-  ["2021-11-29", "2021-12-5"],
+  ["2021-11-29", "2021-12-05"],
 ];
 
 const NOTION_SECRET = Deno.env.get("NOTION_SECRET");
@@ -194,10 +195,10 @@ addEventListener("fetch", async (event) => {
     body = await event.request.json();
   } catch {}
 
-  if (body?.title !== KAKAO_TITLE) {
-    event.respondWith(createJsonResponse({}));
-    return;
-  }
+  // if (body?.title !== KAKAO_TITLE) {
+  //   event.respondWith(createJsonResponse({}));
+  //   return;
+  // }
 
   console.log(`[BODY] ${JSON.stringify(body)}`);
 
