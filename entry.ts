@@ -24,11 +24,14 @@ async function writeDodoLog(
   content: string,
 ): Promise<string | undefined> {
   const now = new Date();
-  const today = now
+  const [yyyy, M, d] = now
     .toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })
     .replace(/\.\s*/g, "-")
-    .replace(/-+$/, "");
+    .replace(/-+$/, "")
+    .split('-');
 
+  const today = `${yyyy}-${M.padStart(2, '0')}-${d.padStart(2, '0')}`
+  
   const weekIndex = WEEKS.findIndex(
     ([from, to]) => from <= today && today <= to,
   );
