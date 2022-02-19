@@ -2,19 +2,20 @@
 
 import { NotiflowBody } from "./notiflow.ts";
 import { createKakaoBalloonSvg } from "./svg.ts";
-const KAKAO_TITLE = "롱텀두두 5회차🍂🍁";
+const KAKAO_TITLE = "🏃롱텀두두 6회";
 
 // 4회 Production: https://www.notion.so/alwaysdodo/72c32fb2699b4075bf907585f3fb59ed?v=29802380246f432b9f3488890c89caa9
-// 5회 Production: https://www.notion.so/alwaysdodo/d88a749ca4884655b66998f5a532f8ee?v=66e6f0de6f10468c9b9b7f11a2dcfb98
-const NOTION_DATABASE = "d88a749ca4884655b66998f5a532f8ee";
+// 5회 Production: https://www.notion.so/alwaysdodo/65bd0f7894d44d49a878ec2d7a739111?v=a4e41f0048b2406bb36df0a9ed4e871b
+// 6회 Production: https://www.notion.so/alwaysdodo/8d8665b125b84850988bf6c8027854a3?v=aa0d0e049ce04139bdcbdc80df5a135c
+const NOTION_DATABASE = "8d8665b125b84850988bf6c8027854a3";
 
 // Development: https://www.notion.so/wan2land/2c5e7017d0604fcf9deeb9bd1ab5db6e?v=35912fbf6be8492b906f9cfba60ea351
 // const NOTION_DATABASE = "2c5e7017d0604fcf9deeb9bd1ab5db6e";
 
 const WEEKS: [from: string, to: string][] = [
-  ["2021-11-13", "2021-11-21"],
-  ["2021-11-22", "2021-11-28"],
-  ["2021-11-29", "2021-12-05"],
+  ["2022-02-19", "2022-02-27"],
+  ["2022-02-28", "2022-03-06"],
+  ["2022-03-07", "2022-03-13"],
 ];
 
 const NOTION_SECRET = Deno.env.get("NOTION_SECRET");
@@ -172,6 +173,7 @@ function createJsonResponse(json: any) {
 
 addEventListener("fetch", async (event) => {
   const url = new URL(event.request.url);
+  console.log(`[LOG] ->> fetch`);
 
   if (url.pathname === "/message.svg") {
     const params = url.searchParams;
@@ -195,13 +197,12 @@ addEventListener("fetch", async (event) => {
   try {
     body = await event.request.json();
   } catch {}
+  console.log(`[BODY] ${JSON.stringify(body)}`);
 
   if (body?.title !== KAKAO_TITLE) {
     event.respondWith(createJsonResponse({}));
     return;
   }
-
-  console.log(`[BODY] ${JSON.stringify(body)}`);
 
   if (!body.message.includes("#인증")) {
     event.respondWith(createJsonResponse({}));
